@@ -6,10 +6,10 @@
 if exists('g:LoupeLoaded') || &compatible || v:version < 700
   finish
 endif
-let g:LoupeLoaded = 1
+let g:LoupeLoaded=1
 
 " Temporarily set 'cpoptions' to Vim default as per `:h use-cpo-save`.
-let s:cpoptions = &cpoptions
+let s:cpoptions=&cpoptions
 set cpoptions&vim
 
 " Reasonable defaults for search-related settings.
@@ -25,17 +25,17 @@ set shortmess+=s " Don't echo search wrap messages.
 set smartcase    " Case-sensitive search if search string includes a capital letter.
 
 " Map <leader>n to clear search highlighting.
-let s:map = exists('g:LoupeClearHighlightMap') ? g:LoupeClearHighlightMap : 1
+let s:map=get(g:, 'LoupeClearHighlightMap', 1)
 if s:map
-  if !hasmapto('<Plug>LoupeClearHighlight') && maparg('<leader>n', 'n') ==# ''
-    nmap <silent> <unique> <leader>n <Plug>LoupeClearHighlight
+  if !hasmapto('<Plug>(LoupeClearHighlight)') && maparg('<leader>n', 'n') ==# ''
+    nmap <silent> <unique> <leader>n <Plug>(LoupeClearHighlight)
   endif
 endif
-nnoremap <silent> <Plug>LoupeClearHighlight
+nnoremap <silent> <Plug>(LoupeClearHighlight)
       \ :nohlsearch<CR>
       \ :call loupe#private#clear_highlight()<CR>
 
-" Make `:nohlsearch` behave like <Plug>LoupeClearHighlight.
+" Make `:nohlsearch` behave like <Plug>(LoupeClearHighlight).
 cabbrev <silent> <expr> noh (getcmdtype() == ':' && getcmdpos() == 4 ? 'noh <bar> call loupe#private#clear_highlight()<CR>' : 'noh')
 cabbrev <silent> <expr> nohl (getcmdtype() == ':' && getcmdpos() == 5 ? 'nohl <bar> call loupe#private#clear_highlight()<CR>' : 'nohl')
 cabbrev <silent> <expr> nohls (getcmdtype() == ':' && getcmdpos() == 6 ? 'nohls <bar> call loupe#private#clear_highlight()<CR>' : 'nohls')
@@ -48,7 +48,7 @@ cabbrev <silent> <expr> nohlsearch (getcmdtype() == ':' && getcmdpos() == 11 ? '
 " When g:LoupeVeryMagic is true (and it is by default), make Vim's regexen more
 " Perl-like.
 function s:MagicString()
-  let s:magic = exists('g:LoupeVeryMagic') ? g:LoupeVeryMagic : 1
+  let s:magic=get(g:, 'LoupeVeryMagic', 1)
   return s:magic ? '\v' : ''
 endfunction
 
@@ -62,8 +62,8 @@ endif
 
 " When g:LoupeCenterResults is true (and it is by default), remain vertically
 " centered when moving to next/previous search.
-let s:center = exists('g:LoupeCenterResults') ? g:LoupeCenterResults : 1
-let s:center_string = s:center ? 'zz' : ''
+let s:center=get(g:, 'LoupeCenterResults', 1)
+let s:center_string=s:center ? 'zz' : ''
 
 execute 'nnoremap <silent> # #' . s:center_string . ':call loupe#private#hlmatch()<CR>'
 execute 'nnoremap <silent> * *' . s:center_string . ':call loupe#private#hlmatch()<CR>'
@@ -81,5 +81,5 @@ if has('autocmd') && has('extra_search')
 endif
 
 " Restore 'cpoptions' to its former value.
-let &cpoptions = s:cpoptions
+let &cpoptions=s:cpoptions
 unlet s:cpoptions

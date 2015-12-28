@@ -7,9 +7,12 @@ CONTENTS                                                       *loupe-contents*
 3. Options         |loupe-options|
 4. Mappings        |loupe-mappings|
 5. Overrides       |loupe-overrides|
-6. License         |loupe-license|
-7. Authors         |loupe-authors|
-8. History         |loupe-history|
+6. Related         |loupe-related|
+7. Website         |loupe-website|
+8. License         |loupe-license|
+9. Development     |loupe-development|
+10. Authors        |loupe-authors|
+11. History        |loupe-history|
 
 
 INTRO                                                             *loupe-intro*
@@ -68,7 +71,7 @@ you want to install Loupe into `~/.vim/bundle`, you can do so with: >
 Alternatively, if you use a Git submodule for each Vim plug-in, you could do
 the following after `cd`-ing into the top-level of your Git superproject: >
 
-  git submodule add loupe https://github.com/wincent/loupe.git ~/vim/bundle/loupe
+  git submodule add https://github.com/wincent/loupe.git ~/vim/bundle/loupe
   git submodule init
 
 To generate help tags under Pathogen, you can do so from inside Vim with: >
@@ -109,7 +112,7 @@ OPTIONS                                                         *loupe-options*
                                                      *g:LoupeClearHighlightMap*
   |g:LoupeClearHighlightMap|                               boolean (default: 1)
 
-  Controls whether to set up the |<Plug>LoupeClearHighlight| mapping. To
+  Controls whether to set up the |<Plug>(LoupeClearHighlight)| mapping. To
   prevent any mapping from being configured, set to 0: >
 
     let g:LoupeClearHighlightMap=0
@@ -126,18 +129,19 @@ OPTIONS                                                         *loupe-options*
 MAPPINGS                                                       *loupe-mappings*
 
                                                     *<Plug>LoupeClearHighlight*
-Loupe maps <leader>n to |<Plug>LoupeClearHighlight|, which clears all visible
+                                                  *<Plug>(LoupeClearHighlight)*
+Loupe maps <leader>n to |<Plug>(LoupeClearHighlight)|, which clears all visible
 highlights (like |:nohighlight| does). To use an alternative mapping instead,
 create a different one in your |.vimrc| instead using |:nmap|: >
 
   " Instead of <leader>n, use <leader>x.
-  nmap <leader>x <Plug>LoupeClearHighlight
+  nmap <leader>x <Plug>(LoupeClearHighlight)
 
 Note that Loupe will not try to set up its <leader>n mapping if any of the
 following are true:
 
 - A mapping for <leader>n already exists.
-- An alternative mapping for |<Plug>LoupeClearHighlight| has already been set
+- An alternative mapping for |<Plug>(LoupeClearHighlight)| has already been set
   up from a |.vimrc|.
 - The mapping has been suppressed by setting |g:LoupeClearHighlightMap| to 1
   in your |.vimrc|.
@@ -148,37 +152,37 @@ OVERRIDES                                                     *loupe-overrides*
 Loupe sets a number of search-related Vim settings to reasonable defaults in
 order to provide a good "out of the box" experience:
 
-                                                               *loupe-history*
+                                                       *loupe-history-override*
   'history'
 
   Increased to 1000, to increase the number of previous searches remembered.
   Note that Loupe only applies this setting if the current value of 'history'
   is less than 1000.
 
-                                                               *loupe-hlsearch*
+                                                      *loupe-hlsearch-override*
   'hlsearch'
 
   Turned on (when there is a previous search pattern, highlight all its
   matches).
 
-                                                              *loupe-incsearch*
+                                                     *loupe-incsearch-override*
   'incsearch'
 
   Turned on (while typing a search command, show where the pattern matches, as
   it was typed so far).
 
-                                                             *loupe-ignorecase*
+                                                    *loupe-ignorecase-override*
   'ignorecase'
 
   Turned on (to ignore case in search patterns).
 
-                                                              *loupe-shortmess*
+                                                     *loupe-shortmess-override*
   'shortmess'
 
   Adds "s", which suppresses the display of "search hit BOTTOM, continuing at
   TOP" and "search hit TOP, continuing at BOTTOM" messages.
 
-                                                              *loupe-smartcase*
+                                                     *loupe-smartcase-override*
   'smartcase'
 
   Turned on (overrides 'ignorecase', making the search pattern case-sensitive
@@ -195,6 +199,29 @@ To override any of these choices, you can place overrides in an
 
   " Remove unwanted 's' from 'shortmess'.
   set shortmess-=s
+
+
+RELATED                                                         *loupe-related*
+
+Just as Loupe aims to improve the within-file search experience, Ferret does
+the same for multi-file searching and replacing:
+
+  https://github.com/wincent/ferret
+
+
+WEBSITE                                                         *loupe-website*
+
+The official Loupe source code repo is at:
+
+  http://git.wincent.com/loupe.git
+
+A mirror exists at:
+
+  https://github.com/wincent/loupe
+
+Official releases are listed at:
+
+  http://www.vim.org/scripts/script.php?script_id=5215
 
 
 LICENSE                                                         *loupe-license*
@@ -223,7 +250,40 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 
-AUTHORS                                                        *loupe-authors*
+DEVELOPMENT                                                 *loupe-development*
+
+Contributing patches ~
+
+Patches can be sent via mail to greg@hurrell.net, or as GitHub pull requests
+at: https://github.com/wincent/loupe/pulls
+
+Cutting a new release ~
+
+At the moment the release process is manual:
+
+- Perform final sanity checks and manual testing
+- Update the |loupe-history| section of the documentation
+- Verify clean work tree: >
+
+    git status
+
+- Tag the release: >
+
+    git tag -s -m "$VERSION release" $VERSION
+
+- Publish the code: >
+
+    git push origin master --follow-tags
+    git push github master --follow-tags
+
+- Produce the release archive: >
+
+    git archive -o loupe-$VERSION.zip HEAD -- .
+
+- Upload to http://www.vim.org/scripts/script.php?script_id=5215
+
+
+AUTHORS                                                         *loupe-authors*
 
 Loupe is written and maintained by Greg Hurrell <greg@hurrell.net>.
 
@@ -240,10 +300,16 @@ Which he discussed in his "More Instantly Better Vim" presentation at OSCON
 
 HISTORY                                                         *loupe-history*
 
-0.1 (not yet released)
+1.0 (28 December 2015)
 
-- initial release, extracted from my dotfiles
-  (https://github.com/wincent/wincent)
+- Renamed the |<Plug>LoupeClearHighlight| mapping to
+  |<Plug>(LoupeClearHighlight)|.
+
+0.1 (5 July 2015)
+
+- Initial release, extracted from my dotfiles
+  (https://github.com/wincent/wincent).
+
 
 -----------------------------------------------------------------------------
 vim:tw=78:ft=help:
